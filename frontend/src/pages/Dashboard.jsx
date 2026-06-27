@@ -5,6 +5,8 @@ import AddSubjectCard from "../components/AddSubjectCard";
 import SummaryCard from "../components/SummaryCard";
 import "../App.css";
 
+const API_URL = "https://gradeflow-production-6f7e.up.railway.app";
+
 function App() {
   const [subjects, setSubjects] = useState([]);
   const [gpa, setGpa] = useState(0);
@@ -21,24 +23,24 @@ function App() {
   }, []);
 
   const fetchSubjects = async () => {
-    const response = await axios.get("http://127.0.0.1:5000/subjects");
+    const response = await axios.get(`${API_URL}/subjects`);
     setSubjects(response.data);
   };
 
   const fetchGpa = async () => {
-    const response = await axios.get("http://127.0.0.1:5000/gpa");
+    const response = await axios.get(`${API_URL}/gpa`);
     setGpa(response.data.gpa);
   };
 
   const addOrUpdateSubject = async () => {
     if (editingId === null) {
-      await axios.post("http://127.0.0.1:5000/subjects", {
+      await axios.post(`${API_URL}/subjects`, {
         name,
         credits: Number(credits),
         grade,
       });
     } else {
-      await axios.put(`http://127.0.0.1:5000/subjects/${editingId}`, {
+      await axios.put(`${API_URL}/subjects/${editingId}`, {
         name,
         credits: Number(credits),
         grade,
@@ -56,7 +58,7 @@ function App() {
   };
 
   const deleteSubject = async (id) => {
-    await axios.delete(`http://127.0.0.1:5000/subjects/${id}`);
+    await axios.delete(`${API_URL}/subjects/${id}`);
 
     fetchSubjects();
     fetchGpa();
@@ -70,28 +72,28 @@ function App() {
   };
 
   return (
-  <div className="container">
-    <HeroSection />
+    <div className="container">
+      <HeroSection />
 
-    <AddSubjectCard
-      name={name}
-      setName={setName}
-      credits={credits}
-      setCredits={setCredits}
-      grade={grade}
-      setGrade={setGrade}
-      addOrUpdateSubject={addOrUpdateSubject}
-      editingId={editingId}
-    />
+      <AddSubjectCard
+        name={name}
+        setName={setName}
+        credits={credits}
+        setCredits={setCredits}
+        grade={grade}
+        setGrade={setGrade}
+        addOrUpdateSubject={addOrUpdateSubject}
+        editingId={editingId}
+      />
 
-    <SummaryCard
-      subjects={subjects}
-      gpa={gpa}
-      editSubject={editSubject}
-      deleteSubject={deleteSubject}
-    />
-  </div>
-);
+      <SummaryCard
+        subjects={subjects}
+        gpa={gpa}
+        editSubject={editSubject}
+        deleteSubject={deleteSubject}
+      />
+    </div>
+  );
 }
 
 export default App;
